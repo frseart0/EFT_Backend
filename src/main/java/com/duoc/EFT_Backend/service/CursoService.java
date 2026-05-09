@@ -20,7 +20,24 @@ public class CursoService {
 
 	@Transactional
 	public Curso crear(Curso curso) {
+		curso.setId(null);
 		return cursoRepository.save(curso);
+	}
+
+	@Transactional
+	public Curso actualizar(Long id, Curso datos) {
+		Curso existente = buscarPorId(id);
+		existente.setTitulo(datos.getTitulo());
+		existente.setDescripcion(datos.getDescripcion());
+		return cursoRepository.save(existente);
+	}
+
+	@Transactional
+	public void eliminar(Long id) {
+		if (!cursoRepository.existsById(id)) {
+			throw new ResourceNotFoundException("Curso", id);
+		}
+		cursoRepository.deleteById(id);
 	}
 
 	@Transactional(readOnly = true)
